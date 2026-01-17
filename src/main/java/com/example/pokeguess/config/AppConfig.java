@@ -10,13 +10,12 @@ public class AppConfig {
 
     @Bean
     public RestTemplate restTemplate() {
-        // 简单配置，适合大多数情况
-        RestTemplate restTemplate = new RestTemplate();
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
 
-        // 设置连接超时（可选）
-        restTemplate.setRequestFactory(new SimpleClientHttpRequestFactory());
+        factory.setConnectTimeout(10000); // 10 seconds
+        factory.setReadTimeout(10000);    // 10 seconds
 
+        RestTemplate restTemplate = new RestTemplate(factory);
         return restTemplate;
     }
-
 }

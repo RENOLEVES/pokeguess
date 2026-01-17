@@ -3,6 +3,7 @@ package com.example.pokeguess.util;
 import com.example.pokeguess.model.Pokemon;
 import com.example.pokeguess.repo.PokemonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -16,8 +17,16 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PokemonRepository repository;
 
+    @Value("${data.init.enabled:true}")
+    private boolean initEnabled;
+
     @Override
     public void run(String... args) throws Exception {
+        if (!initEnabled) {
+            System.out.println("Data initialization disabled by configuration.");
+            return;
+        }
+
         if (repository.count() > 0) {
             System.out.println("Database already initialized with " + repository.count() + " Pokemon.");
             return;
@@ -26,13 +35,22 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("Initializing Pokemon database...");
         RestTemplate restTemplate = new RestTemplate();
 
+        // Set timeouts for external API calls
+        restTemplate.getRequestFactory(); // Use the configured one from AppConfig
+
+        int successCount = 0;
+        int failCount = 0;
+
         for (int i = 1; i <= 151; i++) {
             try {
-                // Get basic Pokemon information
+                // Get basic Pokémon information
                 String url = "https://pokeapi.co/api/v2/pokemon/" + i;
                 Map<String, Object> data = restTemplate.getForObject(url, Map.class);
 
-                if (data == null) continue;
+                if (data == null) {
+                    failCount++;
+                    continue;
+                }
 
                 // Get Chinese name from species endpoint
                 String speciesUrl = "https://pokeapi.co/api/v2/pokemon-species/" + i;
@@ -67,7 +85,7 @@ public class DataInitializer implements CommandLineRunner {
                     }
                 }
 
-                // Create and save Pokemon
+                // Create and save Pokémon
                 Pokemon p = new Pokemon();
                 p.setId(i);
                 p.setNameEn(capitalize(data.get("name").toString()));
@@ -80,20 +98,26 @@ public class DataInitializer implements CommandLineRunner {
                 p.setType2(type2);
 
                 repository.save(p);
+                successCount++;
 
-                System.out.println(String.format("Synchronized #%d: %s (%s) - Type: %s%s",
-                        i, p.getNameEn(), nameZh, type1,
-                        type2 != null ? "/" + type2 : ""));
+                if (i % 10 == 0) {
+                    System.out.println(String.format("Progress: %d/151 Pokemon synchronized (%d succeeded, %d failed)",
+                            i, successCount, failCount));
+                }
 
                 // Small delay to avoid overwhelming the API
-                Thread.sleep(100);
+                Thread.sleep(150);
 
             } catch (Exception e) {
+                failCount++;
                 System.err.println("Error loading Pokemon #" + i + ": " + e.getMessage());
+                // Continue with next Pokemon instead of crashing
             }
         }
 
-        System.out.println("Database initialization complete! Total Pokemon: " + repository.count());
+        System.out.println(String.format(
+                "Database initialization complete! Total: %d Pokemon (%d succeeded, %d failed)",
+                repository.count(), successCount, failCount));
     }
 
     private String capitalize(String str) {
