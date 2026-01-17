@@ -15,9 +15,7 @@ const PokemonGuessGame = () => {
     const [loadingAiHint, setLoadingAiHint] = useState(false);
     const [language, setLanguage] = useState<'en' | "zh">('en');
 
-    const API_BASE = window.location.hostname === 'localhost'
-        ? 'http://localhost:8888/api'
-        : 'https://pokeguess-production.up.railway.app';
+    const API_BASE = process.env.RAILWAY_API_URL || 'http://localhost:8888/api';
 
     // run localhost
     // const API_BASE = 'http://localhost:8888/api'
