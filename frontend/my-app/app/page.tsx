@@ -15,7 +15,7 @@ const PokemonGuessGame = () => {
     const [loadingAiHint, setLoadingAiHint] = useState(false);
     const [language, setLanguage] = useState<'en' | "zh">('en');
 
-    const API_BASE = process.env.RAILWAY_API_URL || 'http://localhost:8888/api';
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8888/api';
 
     // run localhost
     // const API_BASE = 'http://localhost:8888/api'
