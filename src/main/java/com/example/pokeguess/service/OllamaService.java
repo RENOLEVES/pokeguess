@@ -28,7 +28,6 @@ public class OllamaService {
         this.restTemplate = restTemplate;
     }
 
-    // 请求实体
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -38,14 +37,12 @@ public class OllamaService {
         private Boolean stream = false;
         private Map<String, Object> options = new HashMap<>();
 
-        // 简化构造函数
         public OllamaGenerateRequest(String model, String prompt) {
             this.model = model;
             this.prompt = prompt;
         }
     }
 
-    // 响应实体
     @Data
     public static class OllamaGenerateResponse {
         private String model;
@@ -78,28 +75,14 @@ public class OllamaService {
         private Long evalDuration;
     }
 
-    /**
-     * 生成文本
-     * @param prompt 提示词
-     * @return 生成的文本
-     */
     public String generate(String prompt) {
         return generate(prompt, defaultModel);
     }
 
-    /**
-     * 生成文本（指定模型）
-     * @param prompt 提示词
-     * @param modelName 模型名称
-     * @return 生成的文本
-     */
     public String generate(String prompt, String modelName) {
         return generate(prompt, modelName, 0.3, 0.9, 1000);
     }
 
-    /**
-     * 生成文本（完整参数）
-     */
     public String generate(String prompt, String modelName,
                            double temperature, double topP, int maxTokens) {
 
@@ -134,15 +117,13 @@ public class OllamaService {
             }
 
         } catch (RestClientException e) {
-            throw new RuntimeException("调用Ollama API失败: " + e.getMessage(), e);
+            System.err.println("Ollama service unavailable: " + e.getMessage());
+            return "AI service temporarily unavailable. Please try the basic hints!";
         }
 
-        return "抱歉，AI服务暂时不可用。";
+        return "AI service temporarily unavailable.";
     }
 
-    /**
-     * 列出所有可用模型
-     */
     public String listModels() {
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(
@@ -155,9 +136,6 @@ public class OllamaService {
         }
     }
 
-    /**
-     * 检查模型是否存在
-     */
     public boolean modelExists(String modelName) {
         try {
             String models = listModels();
@@ -167,9 +145,6 @@ public class OllamaService {
         }
     }
 
-    /**
-     * 拉取模型
-     */
     public String pullModel(String modelName) {
         Map<String, String> request = Map.of("name", modelName);
         HttpEntity<Map<String, String>> entity = new HttpEntity<>(request);
