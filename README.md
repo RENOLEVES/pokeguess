@@ -1,6 +1,8 @@
 # Pokemon Guess Game 🎮
 
-An interactive Pokemon guessing game with AI-powered hints using Ollama and Spring Boot backend.
+An interactive game helps new Pokémon trainers to get familiar with various Pokémons ❤️❤️❤️
+
+![img.png](img.png)
 
 ## Features
 
