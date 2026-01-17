@@ -6,11 +6,9 @@ An interactive game helps new Pokémon trainers to get familiar with various Pok
 
 ## Features
 
-- **Silhouette Guessing**: Guess Pokemon from their shadowed images
-- **Progressive Hints**: Reveal hints one by one (Type, Height, Weight, Color)
+- **Silhouette Guessing**: Guess Pokémon from their shadowed images
 - **AI Assistant**: Get creative AI-generated hints using Ollama
 - **Score Tracking**: Keep track of your success rate
-- **Modern UI**: Beautiful gradient design with smooth animations
 
 ## Tech Stack
 
@@ -24,8 +22,7 @@ An interactive game helps new Pokémon trainers to get familiar with various Pok
 **Frontend:**
 - React 18
 - Tailwind CSS
-- Lucide Icons
-- Modern ES6+
+- Gradle
 
 ## Prerequisites
 
@@ -33,7 +30,7 @@ An interactive game helps new Pokémon trainers to get familiar with various Pok
 2. **PostgreSQL** database
 3. **Ollama** installed locally
 4. **Node.js** (for frontend development)
-5. **Maven** (for building backend)
+5. **Gradle** (for building backend)
 
 ## Setup Instructions
 
@@ -131,7 +128,7 @@ The frontend will open at `http://localhost:3000`
 ### Game Endpoints
 
 **GET** `/api/pokemon/quiz`
-- Returns a random Pokemon with ID and image URL
+- Returns a random Pokémon with ID and image URL
 
 **POST** `/api/pokemon/check`
 - Body: `{ "id": 1, "userAnswer": "Bulbasaur" }`
