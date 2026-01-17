@@ -50,25 +50,13 @@ public class PokemonGameController {
     }
 
     /**
-     * Get hints for a specific Pokemon (type, height, weight, color)
-     */
-    @GetMapping("/hints/{id}")
-    public ResponseEntity<Map<String, String>> getHints(@PathVariable Integer id) {
-        Map<String, String> hints = pokemonGameService.getHints(id);
-
-        if (hints == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(hints);
-    }
-
-    /**
      * Get AI-generated hint for a Pokemon
      */
     @GetMapping("/ai-hint/{id}")
-    public ResponseEntity<Map<String, String>> getAiHint(@PathVariable Integer id) {
-        String hint = pokemonGameService.getAiHint(id);
+    public ResponseEntity<Map<String, String>> getAiHint(
+            @PathVariable Integer id,
+            @RequestParam(defaultValue = "en") String language) {
+        String hint = pokemonGameService.getAiHint(id, language);
 
         if (hint == null) {
             return ResponseEntity.notFound().build();
