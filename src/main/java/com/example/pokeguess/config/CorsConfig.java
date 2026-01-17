@@ -15,7 +15,8 @@ public class CorsConfig {
                 registry.addMapping("/api/**")
                         .allowedOrigins(
                                 "http://localhost:3000",
-                                "https://pokeguess-teal.vercel.app"
+                                "https://pokeguess-teal.vercel.app",
+                                "https://your-new-vercel-url.vercel.app"  // Add your Vercel URL here
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*");
