@@ -46,7 +46,7 @@ public class PokemonGameService {
     }
 
     /**
-     * Get the correct name for a Pokemon
+     * Get the correct name for a Pokémon
      */
     public String getCorrectName(Integer id) {
         return pokemonRepository.findById(id)
@@ -55,7 +55,7 @@ public class PokemonGameService {
     }
 
     /**
-     * Get hints for a Pokemon (type, height, weight, color)
+     * Get hints for a Pokémon (type, height, weight, color) -- not used
      */
     public Map<String, String> getHints(Integer id) {
         Pokemon pokemon = pokemonRepository.findById(id).orElse(null);
@@ -93,7 +93,7 @@ public class PokemonGameService {
         Map<String, String> data = new HashMap<>();
 
         try {
-            // Get Pokemon data for height/weight
+            // Get Pokémon data for height/weight
             String pokemonUrl = "https://pokeapi.co/api/v2/pokemon/" + id;
             Map<String, Object> pokemonData = restTemplate.getForObject(pokemonUrl, Map.class);
 

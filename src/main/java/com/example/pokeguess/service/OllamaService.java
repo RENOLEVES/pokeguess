@@ -22,10 +22,26 @@ public class OllamaService {
     @Value("${ollama.default-model:gemma2:9b}")
     private String defaultModel;
 
+    @Value("${ollama.enabled:true}")
+    private boolean ollamaEnabled;
+
     private final RestTemplate restTemplate;
 
     public OllamaService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+    }
+
+    // check if ollama is available (railway deployment)
+    private boolean isOllamaAvailable() {
+        if (!ollamaEnabled) {
+            return false;
+        }
+        try {
+            restTemplate.getForEntity(ollamaUrl + "/api/tags", String.class);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Data
@@ -86,6 +102,11 @@ public class OllamaService {
     public String generate(String prompt, String modelName,
                            double temperature, double topP, int maxTokens) {
 
+        if (!isOllamaAvailable()) {
+            System.out.println("Ollama service is not available.");
+            return "AI service temporarily unavailable.";
+        }
+
         OllamaGenerateRequest request = new OllamaGenerateRequest();
         request.setModel(modelName);
         request.setPrompt(prompt);
@@ -132,7 +153,7 @@ public class OllamaService {
             );
             return response.getBody();
         } catch (Exception e) {
-            return "获取模型列表失败: " + e.getMessage();
+            return "Failed to fetch model list: " + e.getMessage();
         }
     }
 
@@ -157,7 +178,7 @@ public class OllamaService {
             );
             return response.getBody();
         } catch (Exception e) {
-            return "拉取模型失败: " + e.getMessage();
+            return "Failed to load model: " + e.getMessage();
         }
     }
 }
