@@ -40,7 +40,7 @@ const PokemonGuessGame = () => {
             loading: "Loading Pokemon...",
             correct: "Correct! It was",
             wrong: "Wrong! Try again or skip to next.",
-            errorLoading: "Error loading Pokemon. Make sure backend is running on port 8888.",
+            errorLoading: "Error loading Pokemon.",
             errorChecking: "Error checking answer. Please try again.",
             aiUnavailable: "AI hint currently unavailable."
         },
@@ -156,34 +156,38 @@ const PokemonGuessGame = () => {
 
     if (loading && !pokemon) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-white text-2xl font-bold animate-pulse">Loading Pokemon...</div>
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <div className="text-gray-800 text-2xl font-bold animate-pulse">Loading Pokemon...</div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen pt-10">
-            <div className="max-w-4xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-2xl p-6 mb-6">
-                    <div className="flex items-center justify-between">
+        <div className="min-h-screen pt-6 md:pt-10 bg-white">
+            <div className="max-w-4xl mx-auto px-4">
+                <div className="bg-white rounded-2xl shadow-2xl p-4 md:p-6 mb-6">
+                    {/* Mobile: Two-line layout, Desktop: Single-line layout */}
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        {/* First line on mobile: Icon and Title */}
                         <div className="flex items-center gap-3">
-                            <img src='/pokeball-png-45330.png' alt="Pokemon Logo" height="50px" width="50px"/>
-                            <h1 className="text-3xl font-bold text-gray-800">{getText('title')}</h1>
+                            <img src='/pokeball-png-45330.png' alt="Pokemon Logo" className="w-10 h-10 md:w-12 md:h-12"/>
+                            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{getText('title')}</h1>
                         </div>
-                        <div className="flex items-center gap-6">
+
+                        {/* Second line on mobile: Language button and stats */}
+                        <div className="flex items-center justify-between md:justify-end gap-4 md:gap-6">
                             <button
                                 onClick={toggleLanguage}
-                                className="flex items-center gap-2 text-black border-black border-2 px-4 py-2 rounded-lg transform hover:scale-105 active:scale-95 shadow-md"
+                                className="flex items-center gap-2 text-black border-black border-2 px-3 md:px-4 py-2 rounded-lg transform hover:scale-105 active:scale-95 shadow-md"
                             >
-                                <span className="font-semibold">{language === 'en' ? '中文' : 'EN'}</span>
+                                <span className="font-semibold text-sm md:text-base">{language === 'en' ? '中文' : 'EN'}</span>
                             </button>
                             <div className="text-center">
-                                <div className="text-2xl font-bold ">{score}</div>
+                                <div className="text-xl md:text-2xl font-bold text-gray-800">{score}</div>
                                 <div className="text-xs text-gray-600">{getText('score')}</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-2xl font-bold">{attempts}</div>
+                                <div className="text-xl md:text-2xl font-bold text-gray-800">{attempts}</div>
                                 <div className="text-xs text-gray-600">{getText('attempts')}</div>
                             </div>
                         </div>
@@ -191,7 +195,7 @@ const PokemonGuessGame = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-2xl shadow-2xl p-8">
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
                         <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
                             {pokemon.imageUrl && (
                                 <img
@@ -215,7 +219,7 @@ const PokemonGuessGame = () => {
                                 onKeyPress={handleKeyPress}
                                 placeholder={getText('inputPlaceholder')}
                                 disabled={gameState === 'correct' || loading}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none text-lg disabled:bg-gray-100"
+                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none text-lg disabled:bg-gray-100 text-gray-800"
                             />
 
                             <div className="flex gap-3">
