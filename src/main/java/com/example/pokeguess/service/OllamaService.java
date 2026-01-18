@@ -38,8 +38,8 @@ public class OllamaService {
         }
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set("ngrok-skip-browser-warning", "true");  // ADD THIS
-            headers.set("User-Agent", "SpringBoot-Pokemon-Game");  // ADD THIS
+            headers.set("ngrok-skip-browser-warning", "true");
+            headers.set("User-Agent", "SpringBoot-Pokemon-Game");
 
             HttpEntity<String> entity = new HttpEntity<>(headers);
             restTemplate.exchange(
@@ -50,6 +50,7 @@ public class OllamaService {
             );
             return true;
         } catch (Exception e) {
+            System.err.println("Ollama not available: " + e.getMessage());
             return false;
         }
     }
@@ -131,8 +132,8 @@ public class OllamaService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("ngrok-skip-browser-warning", "true");  // ADD THIS LINE
-        headers.set("User-Agent", "SpringBoot-Pokemon-Game");  // ADD THIS LINE
+        headers.set("ngrok-skip-browser-warning", "true");
+        headers.set("User-Agent", "SpringBoot-Pokemon-Game");
 
         HttpEntity<OllamaGenerateRequest> entity = new HttpEntity<>(request, headers);
 
@@ -159,8 +160,15 @@ public class OllamaService {
 
     public String listModels() {
         try {
-            ResponseEntity<String> response = restTemplate.getForEntity(
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("ngrok-skip-browser-warning", "true");
+            headers.set("User-Agent", "SpringBoot-Pokemon-Game");
+
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            ResponseEntity<String> response = restTemplate.exchange(
                     ollamaUrl + "/api/tags",
+                    HttpMethod.GET,
+                    entity,
                     String.class
             );
             return response.getBody();
@@ -180,7 +188,13 @@ public class OllamaService {
 
     public String pullModel(String modelName) {
         Map<String, String> request = Map.of("name", modelName);
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(request);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("ngrok-skip-browser-warning", "true");
+        headers.set("User-Agent", "SpringBoot-Pokemon-Game");
+
+        HttpEntity<Map<String, String>> entity = new HttpEntity<>(request, headers);
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(
