@@ -37,7 +37,17 @@ public class OllamaService {
             return false;
         }
         try {
-            restTemplate.getForEntity(ollamaUrl + "/api/tags", String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("ngrok-skip-browser-warning", "true");  // ADD THIS
+            headers.set("User-Agent", "SpringBoot-Pokemon-Game");  // ADD THIS
+
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            restTemplate.exchange(
+                    ollamaUrl + "/api/tags",
+                    HttpMethod.GET,
+                    entity,
+                    String.class
+            );
             return true;
         } catch (Exception e) {
             return false;
@@ -121,6 +131,8 @@ public class OllamaService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("ngrok-skip-browser-warning", "true");  // ADD THIS LINE
+        headers.set("User-Agent", "SpringBoot-Pokemon-Game");  // ADD THIS LINE
 
         HttpEntity<OllamaGenerateRequest> entity = new HttpEntity<>(request, headers);
 
